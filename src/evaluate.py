@@ -29,7 +29,7 @@ os.makedirs("metrics", exist_ok=True)
 # Load data and model
 df = pd.read_csv(data_file)
 with open(model_file, 'rb') as f:
-    model, user_product_matrix = pickle.load(f)
+    model, user_product_matrix, top_summaries = pickle.load(f)
 
 # Evaluate
 recall_scores = []

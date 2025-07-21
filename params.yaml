@@ -1,5 +1,5 @@
 train:
-  min_user_interactions: 5
+  min_user_interactions: 4
   min_product_interactions: 5
   metric: cosine
   neighbors: 5

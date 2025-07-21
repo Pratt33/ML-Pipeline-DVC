@@ -31,6 +31,16 @@ active_users = user_counts[user_counts >= min_user_interactions].index
 active_products = product_counts[product_counts >= min_product_interactions].index
 df = df[df['UserId'].isin(active_users) & df['ProductId'].isin(active_products)]
 
+# Extract top summary for each product with Score >= 4
+positive_reviews = df[df['Score'] >= 4]
+top_summaries = (
+    positive_reviews
+    .groupby("ProductId")["Summary"]
+    .first()
+    .fillna("No summary available")
+    .to_dict()
+)
+
 # Create user-item matrix
 user_product_matrix = df.pivot_table(index='UserId', columns='ProductId', values='Score').fillna(0)
 sparse_matrix = csr_matrix(user_product_matrix.values)
@@ -39,6 +49,6 @@ sparse_matrix = csr_matrix(user_product_matrix.values)
 model = NearestNeighbors(metric=metric, algorithm='brute', n_neighbors=n_neighbors)
 model.fit(sparse_matrix)
 
-# Save model and metadata
+# Save model, matrix, and summaries
 with open(output_model, 'wb') as f:
-    pickle.dump((model, user_product_matrix), f)
+    pickle.dump((model, user_product_matrix, top_summaries), f)
