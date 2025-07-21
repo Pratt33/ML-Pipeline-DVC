@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException
+import os
+from fastapi import FastAPI, HTTPException, Depends, Header
 from pydantic import BaseModel
 import pickle
 import pandas as pd
@@ -9,11 +10,17 @@ app = FastAPI()
 with open("models/knn_model.pkl", "rb") as f:
     model, user_product_matrix, top_summaries = pickle.load(f)
 
+API_KEY = os.getenv("API_KEY", "changeme123")
+
+def verify_api_key(x_api_key: str = Header(...)):
+    if x_api_key != API_KEY:
+        raise HTTPException(status_code=401, detail="Invalid or missing API Key")
+
 class UserRequest(BaseModel):
     user_id: str
 
 @app.post("/recommend")
-def recommend(req: UserRequest):
+def recommend(req: UserRequest, api_key: str = Depends(verify_api_key)):
     user_id = req.user_id
 
     if user_id not in user_product_matrix.index:
@@ -37,11 +44,11 @@ def recommend(req: UserRequest):
     return {"user_id": user_id, "recommendations": output}
 
 @app.get("/users")
-def get_users():
+def get_users(api_key: str = Depends(verify_api_key)):
     """Get list of available user IDs"""
     return {"users": list(user_product_matrix.index[:10])}  # Show first 10 users
 
 @app.get("/")
-def root():
+def root(api_key: str = Depends(verify_api_key)):
     """Root endpoint"""
     return {"message": "ML Recommendation API", "endpoints": ["/recommend", "/users", "/docs"]}

@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pandas
+numpy
+scikit-learn
+scipy
+pydantic
+pyyaml
+kaggle
+streamlit
+matplotlib
+seaborn
+wordcloud

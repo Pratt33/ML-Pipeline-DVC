@@ -18,3 +18,23 @@ __pycache__/
 # Allow tracking of .dvc files in data/raw
 !data/raw/*.dvc
 !data/raw/*.dvclock
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore metrics
+/metrics/*
+!/metrics/.gitkeep
+
+# Ignore notebooks
+/notebook/*
+!/notebook/.gitkeep
+
+# Ignore models
+/models/*
+!/models/.gitkeep
+
+# Ignore DVC lock and yaml
+# /dvc.lock
+# /dvc.yaml
