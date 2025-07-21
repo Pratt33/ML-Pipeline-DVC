@@ -13,19 +13,30 @@ stages:
     - data/raw/Reviews.csv
     outs:
     - data/processed/processed_reviews.csv
+
   train_model:
     cmd: python src/training.py
     deps:
     - data/processed/processed_reviews.csv
     - src/training.py
+    params:
+    - train.min_user_interactions
+    - train.min_product_interactions
+    - train.metric
+    - train.neighbors
     outs:
     - models/knn_model.pkl
+
   evaluate_model:
     cmd: python src/evaluate.py
     deps:
     - data/processed/processed_reviews.csv
     - models/knn_model.pkl
     - src/evaluate.py
+    params:
+    - evaluate.top_k
+    - evaluate.eval_user_count
+    - evaluate.rating_threshold
     metrics:
     - metrics/recall.json:
         cache: false

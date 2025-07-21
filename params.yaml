@@ -1,0 +1,10 @@
+train:
+  min_user_interactions: 5
+  min_product_interactions: 5
+  metric: cosine
+  neighbors: 5
+
+evaluate:
+  top_k: 5
+  eval_user_count: 50
+  rating_threshold: 4

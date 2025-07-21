@@ -1,6 +1,5 @@
 # Ignore DVC cache and temporary files
 /.dvc/
-*.lock
 
 # Ignore Python cache files
 __pycache__/
@@ -16,3 +15,6 @@ __pycache__/
 # Ignore data files
 /data/raw/*
 !/data/raw/.gitkeep
+# Allow tracking of .dvc files in data/raw
+!data/raw/*.dvc
+!data/raw/*.dvclock
