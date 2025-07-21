@@ -37,8 +37,8 @@ stages:
       size: 283863027
     - path: src/training.py
       hash: md5
-      md5: 85873813953ea469722c56052c94a73a
-      size: 1561
+      md5: fb0111b4f953aebf2d8816a9ebdd7162
+      size: 1834
     params:
       params.yaml:
         train.metric: cosine
@@ -48,8 +48,8 @@ stages:
     outs:
     - path: models/knn_model.pkl
       hash: md5
-      md5: 987974de5c10eafc7913dc9e7a723adb
-      size: 3266868951
+      md5: d77816d845288d5a43317aacb225b66f
+      size: 3267395638
   evaluate_model:
     cmd: python src/evaluate.py
     deps:
@@ -59,12 +59,12 @@ stages:
       size: 283863027
     - path: models/knn_model.pkl
       hash: md5
-      md5: 987974de5c10eafc7913dc9e7a723adb
-      size: 3266868951
+      md5: d77816d845288d5a43317aacb225b66f
+      size: 3267395638
     - path: src/evaluate.py
       hash: md5
-      md5: c4f28e8049c78742cc5bf98a9555114c
-      size: 1851
+      md5: 244ab2e6c327d1b44c832c45ebf17f9f
+      size: 1866
     params:
       params.yaml:
         evaluate.eval_user_count: 50
@@ -73,5 +73,5 @@ stages:
     outs:
     - path: metrics/recall.json
       hash: md5
-      md5: 6017a60e2766daa931aa87b35a86bd95
+      md5: 1c3a7e01fe4c957615cf29438a1a2ec3
       size: 22
