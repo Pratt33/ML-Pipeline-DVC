@@ -2,6 +2,7 @@ import streamlit as st
 import pickle
 import pandas as pd
 import os
+os.system("dvc pull -f")
 
 # --- Custom CSS for styling ---
 st.markdown("""
