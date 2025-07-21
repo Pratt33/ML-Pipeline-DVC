@@ -1,0 +1,30 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/data_ingestion.py
+    deps:
+    - path: src/data_ingestion.py
+      hash: md5
+      md5: b6415745e5275dd0114b4ca4625abca1
+      size: 260
+    outs:
+    - path: data/raw/Reviews.csv
+      hash: md5
+      md5: c3c950ae0be8b0736477c89d052d33fd
+      size: 300904694
+  data_preprocess:
+    cmd: python src/data_preprocess.py
+    deps:
+    - path: data/raw/Reviews.csv
+      hash: md5
+      md5: c3c950ae0be8b0736477c89d052d33fd
+      size: 300904694
+    - path: src/data_preprocess.py
+      hash: md5
+      md5: 145fa8b4fe24ee232ebad018dc0b5a29
+      size: 568
+    outs:
+    - path: data/processed/processed_reviews.csv
+      hash: md5
+      md5: d258c2fd2e61dc8b10db50af6b1e1a8e
+      size: 283863027
