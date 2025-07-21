@@ -2,14 +2,21 @@ stages:
   data_ingestion:
     cmd: python src/data_ingestion.py
     deps:
-      - src/data_ingestion.py
+    - src/data_ingestion.py
     outs:
-      - data/raw/Reviews.csv
+    - data/raw/Reviews.csv
 
   data_preprocess:
     cmd: python src/data_preprocess.py
     deps:
-      - src/data_preprocess.py
-      - data/raw/Reviews.csv
+    - src/data_preprocess.py
+    - data/raw/Reviews.csv
     outs:
-      - data/processed/processed_reviews.csv
+    - data/processed/processed_reviews.csv
+  train_model:
+    cmd: python src/training.py
+    deps:
+    - data/processed/processed_reviews.csv
+    - src/training.py
+    outs:
+    - models/knn_model.pkl

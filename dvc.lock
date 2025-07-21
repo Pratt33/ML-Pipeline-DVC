@@ -28,3 +28,19 @@ stages:
       hash: md5
       md5: d258c2fd2e61dc8b10db50af6b1e1a8e
       size: 283863027
+  train_model:
+    cmd: python src/training.py
+    deps:
+    - path: data/processed/processed_reviews.csv
+      hash: md5
+      md5: d258c2fd2e61dc8b10db50af6b1e1a8e
+      size: 283863027
+    - path: src/training.py
+      hash: md5
+      md5: 527c742356e63ccf81c7c233b406aeb5
+      size: 1238
+    outs:
+    - path: models/knn_model.pkl
+      hash: md5
+      md5: 987974de5c10eafc7913dc9e7a723adb
+      size: 3266868951
