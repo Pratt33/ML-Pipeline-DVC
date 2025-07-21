@@ -11,3 +11,4 @@ streamlit
 matplotlib
 seaborn
 wordcloud
+dvc

@@ -1,40 +1,46 @@
-# Ignore DVC cache and temporary files
-/.dvc/
-
-# Ignore Python cache files
+# Byte-compiled / cache / temp files
 __pycache__/
 *.py[cod]
+*.so
+*.log
+*.tmp
+*.swp
+*.swo
+*~
 
-# Ignore Jupyter Notebook checkpoints
+# Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
-# Ignore environment files
+# Environment files
 .env
 *.env
 
-# Ignore data files
-/data/raw/*
-!/data/raw/.gitkeep
-# Allow tracking of .dvc files in data/raw
-!data/raw/*.dvc
-!data/raw/*.dvclock
+# Data, models, and outputs (DVC will manage .dvc files)
+data/
+models/
+metrics/
+visualizations/
+notebook/
+*.csv
+*.pkl
+*.json
+*.h5
+*.db
 
-# Ignore logs
-*.log
-logs/
+# DVC cache (but NOT dvc.yaml or dvc.lock)
+.dvc/
 
-# Ignore metrics
-/metrics/*
-!/metrics/.gitkeep
+# VSCode and IDE
+.vscode/
+.idea/
 
-# Ignore notebooks
-/notebook/*
-!/notebook/.gitkeep
+# System files
+.DS_Store
+Thumbs.db
 
-# Ignore models
-/models/*
-!/models/.gitkeep
+# Streamlit
+.streamlit/
 
-# Ignore DVC lock and yaml
-# /dvc.lock
-# /dvc.yaml
+# Allow DVC pipeline files
+dvc.yaml
+dvc.lock
