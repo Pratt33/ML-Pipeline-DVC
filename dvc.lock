@@ -44,3 +44,23 @@ stages:
       hash: md5
       md5: 987974de5c10eafc7913dc9e7a723adb
       size: 3266868951
+  evaluate_model:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/processed/processed_reviews.csv
+      hash: md5
+      md5: d258c2fd2e61dc8b10db50af6b1e1a8e
+      size: 283863027
+    - path: models/knn_model.pkl
+      hash: md5
+      md5: 987974de5c10eafc7913dc9e7a723adb
+      size: 3266868951
+    - path: src/evaluate.py
+      hash: md5
+      md5: fec13e771ad6119c8f34561e0a4ec981
+      size: 1858
+    outs:
+    - path: metrics/recall.json
+      hash: md5
+      md5: 7ea2a6dc0eda9111afba054a20a8e29c
+      size: 23

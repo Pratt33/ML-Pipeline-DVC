@@ -20,3 +20,12 @@ stages:
     - src/training.py
     outs:
     - models/knn_model.pkl
+  evaluate_model:
+    cmd: python src/evaluate.py
+    deps:
+    - data/processed/processed_reviews.csv
+    - models/knn_model.pkl
+    - src/evaluate.py
+    metrics:
+    - metrics/recall.json:
+        cache: false
