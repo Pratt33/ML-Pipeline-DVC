@@ -1,5 +1,6 @@
 import streamlit as st
-import requests
+import pickle
+import pandas as pd
 import os
 
 # --- Custom CSS for styling ---
@@ -13,77 +14,24 @@ st.markdown("""
         margin-bottom: 2rem;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
-    .recommendation-box {
-        padding: 1.5rem;
-        border-radius: 10px;
-        margin: 1rem 0;
-        text-align: center;
-        font-size: 1.2rem;
-        font-weight: bold;
-        background-color: #e3f2fd;
-        border: 2px solid #2196f3;
-    }
-    .error-box {
-        background-color: #ffebee;
-        color: #c62828;
-        border: 2px solid #ef5350;
-        padding: 1rem;
-        border-radius: 10px;
-        margin: 1rem 0;
-        text-align: center;
-    }
-    .info-box {
-        background-color: #e8f5e9;
-        color: #2e7d32;
-        border: 2px solid #66bb6a;
-        padding: 1rem;
-        border-radius: 10px;
-        margin: 1rem 0;
-        text-align: center;
-    }
 </style>
 """, unsafe_allow_html=True)
-
-
-api_url = os.getenv("API_URL", "http://localhost:8000")
-api_key = os.getenv("API_KEY", "changeme123")
 
 # --- Main header ---
 st.markdown('<h1 class="main-header">🛒 Product Recommendation System</h1>', unsafe_allow_html=True)
 
-# --- API status check ---
-def check_api_status():
-    try:
-        resp = requests.get(f"{api_url}/", headers={"X-API-Key": api_key}, timeout=5)
-        if resp.status_code == 200:
-            return True, resp.json()
-        else:
-            return False, resp.text
-    except Exception as e:
-        return False, str(e)
+# --- Load model and data ---
+@st.cache_resource(show_spinner=True)
+def load_model():
+    with open("models/knn_model.pkl", "rb") as f:
+        model, user_product_matrix, top_summaries = pickle.load(f)
+    return model, user_product_matrix, top_summaries
 
-api_ok, api_info = check_api_status()
-# Place API status
-st.markdown(f'''
-    <div style="position: absolute; top: 1.5rem; right: 2rem; min-width: 180px; max-width: 250px; z-index: 9999;">
-        <div style="font-size: 0.95rem; padding: 0.5rem 1rem; border-radius: 8px; text-align: center; {'background-color: #e8f5e9; color: #2e7d32; border: 1.5px solid #66bb6a;' if api_ok else 'background-color: #ffebee; color: #c62828; border: 1.5px solid #ef5350;'}">
-            {'API Online' if api_ok else 'API Offline'}
-        </div>
-    </div>
-''', unsafe_allow_html=True)
-if not api_ok:
-    st.stop()
+model, user_product_matrix, top_summaries = load_model()
 
 # --- Get available users ---
 def get_users():
-    try:
-        resp = requests.get(f"{api_url}/users", headers={"X-API-Key": api_key}, timeout=10)
-        if resp.status_code == 200:
-            return resp.json().get("users", [])
-        else:
-            return []
-    except Exception:
-        return []
+    return list(user_product_matrix.index[:10])
 
 user_ids = get_users()
 
@@ -92,32 +40,31 @@ st.header("🔍 Get Recommendations")
 user_id = st.selectbox("Select a User ID", user_ids) if user_ids else st.text_input("Enter User ID")
 
 if st.button("Get Recommendations", type="primary"):
-    with st.spinner("Fetching recommendations..."):
-        try:
-            resp = requests.post(
-                f"{api_url}/recommend",
-                headers={"X-API-Key": api_key},
-                json={"user_id": user_id},
-                timeout=15
-            )
-            if resp.status_code == 200:
-                recs = resp.json().get("recommendations", [])
-                if recs:
-                    st.subheader(f"Top Recommendations for User: {user_id}")
-                    for rec in recs:
-                        col1, col2 = st.columns([1, 4])
-                        with col1:
-                            st.markdown(f"**Product ID:**")
-                            st.code(rec['product_id'])
-                        with col2:
-                            st.markdown(f"**Summary:** {rec['summary']}")
-                        st.markdown("---")
-                else:
-                    st.info("No recommendations found for this user.")
+    if user_id not in user_product_matrix.index:
+        st.error("User not found. Please enter a valid user ID.")
+    else:
+        with st.spinner("Generating recommendations..."):
+            user_vector = user_product_matrix.loc[user_id].values.reshape(1, -1)
+            distances, indices = model.kneighbors(user_vector, n_neighbors=6)
+            recommended_items = set()
+            for i in indices[0]:
+                sim_user = user_product_matrix.index[i]
+                if sim_user != user_id:
+                    top_items = user_product_matrix.loc[sim_user].sort_values(ascending=False).head(5).index
+                    recommended_items.update(top_items)
+            recs = list(recommended_items)[:5]
+            if recs:
+                st.subheader(f"Top Recommendations for User: {user_id}")
+                for pid in recs:
+                    col1, col2 = st.columns([1, 4])
+                    with col1:
+                        st.markdown(f"**Product ID:**")
+                        st.code(pid)
+                    with col2:
+                        st.markdown(f"**Summary:** {top_summaries.get(pid, 'No summary available')}")
+                    st.markdown("---")
             else:
-                st.markdown(f'<div class="error-box">❌ Error: {resp.text}</div>', unsafe_allow_html=True)
-        except Exception as e:
-            st.markdown(f'<div class="error-box">❌ Exception: {str(e)}</div>', unsafe_allow_html=True)
+                st.info("No recommendations found for this user.")
 
 # --- About section ---
 st.markdown("---")
@@ -126,15 +73,15 @@ with st.expander("ℹ️ About This App", expanded=False):
     This web app provides personalized product recommendations using a machine learning model trained on Amazon Fine Food Reviews. Enter a user ID to get product suggestions based on similar users' preferences.
 
     **Features:**
-    - FastAPI backend with API
-    - Streamlit UI
-    - Docker and DVC
+    - Standalone Streamlit app (no API required)
+    - Modern, responsive UI
+    - DVC and Git for data and model management
     """)
-    st.info("Built with ❤️ using Machine Learning")
+    st.info("Built with ❤️ using Streamlit and Machine Learning")
 
 # --- User ID note ---
 st.markdown("""
 <div style='margin-top:2rem; font-size:1.05rem; color:#444;'>
-<b>Note:</b> You can enter <b>any user ID</b> that exists in the model's data, not just those shown in the dropdown.
+<b>Note:</b> You can enter <b>any user ID</b> that exists in the model's data, not just those shown in the dropdown. If you enter a user ID that is not present in the model, you will see an error message.
 </div>
 """, unsafe_allow_html=True) 
