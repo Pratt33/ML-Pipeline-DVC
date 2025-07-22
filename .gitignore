@@ -42,5 +42,5 @@ Thumbs.db
 .streamlit/
 
 # Allow DVC pipeline files
-dvc.yaml
-dvc.lock
+!/dvc.yaml
+!/dvc.lock
