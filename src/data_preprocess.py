@@ -10,7 +10,7 @@ def paths():
 
 # Read the data from the input file
 
-def process_data(df):
+def process_data(df: pd.DataFrame) -> pd.DataFrame:
     # Drop unnecessary columns
     keep_cols = ['Id', 'ProductId', 'UserId', 'Score', 'Summary', 'Text']
     df = df[keep_cols].copy()
@@ -22,7 +22,7 @@ def process_data(df):
     df.loc[:, 'Text'] = df['Text'].str.lower().str.strip()
 
     return df
-def save_data(df, output_file):
+def save_data(df: pd.DataFrame, output_file: str) -> str:
     df.to_csv(output_file, index=False)
     return output_file
 

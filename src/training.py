@@ -18,7 +18,7 @@ def load_file_paths(data_file, output_dir, output_model):
     return data_file, output_model
 
 
-def use_parameters():
+def use_parameters() -> tuple:
     params = load_parameters()
     min_user_interactions = params["train"]["min_user_interactions"]
     min_product_interactions = params["train"]["min_product_interactions"]
@@ -26,7 +26,7 @@ def use_parameters():
     n_neighbors = params["train"]["neighbors"]
     return min_user_interactions, min_product_interactions, metric, n_neighbors
 
-def filter_data(df, min_user_interactions, min_product_interactions):
+def filter_data(df: pd.DataFrame, min_user_interactions: int, min_product_interactions: int) -> pd.DataFrame:
     user_counts = df['UserId'].value_counts()
     product_counts = df['ProductId'].value_counts()
     active_users = user_counts[user_counts >= min_user_interactions].index

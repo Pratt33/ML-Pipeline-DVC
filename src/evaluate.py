@@ -6,18 +6,18 @@ import json
 import os
 import yaml
 
-def recall_at_k(predicted, actual, k=5):
+def recall_at_k(predicted: list, actual: list, k: int = 5) -> float:
     predicted_top_k = predicted[:k]
     actual_set = set(actual)
     hits = sum([1 for item in predicted_top_k if item in actual_set])
     return hits / float(min(k, len(actual_set))) if actual_set else 0.0
 
-def load_param_file():
+def load_param_file() -> dict:
     with open("params.yaml", "r") as f:
         params = yaml.safe_load(f)
     return params
 # Load parameters
-def load_parameters():
+def load_parameters() -> tuple:
     params = load_param_file()
     # Extract parameters for evaluation
     top_k = params["evaluate"]["top_k"]
@@ -27,7 +27,7 @@ def load_parameters():
 
 
 # File paths
-def load_file_paths():
+def load_file_paths() -> tuple:
     data_file = "data/processed/processed_reviews.csv"
     model_file = "models/knn_model.pkl"
     output_metrics = "metrics/recall.json"
@@ -42,7 +42,7 @@ def load_model_data(model_file):
 df = pd.read_csv(load_file_paths()[0])
 
 # Evaluate
-def evalute_model(model, user_product_matrix, df, top_k, eval_user_count, rating_threshold):
+def evaluate_model(model, user_product_matrix: pd.DataFrame, df: pd.DataFrame, top_k: int, eval_user_count: int, rating_threshold: int) -> dict:
 
     recall_scores = []
     user_ids = user_product_matrix.index.tolist()
@@ -67,7 +67,7 @@ def evalute_model(model, user_product_matrix, df, top_k, eval_user_count, rating
 
     return metrics
 
-def output_metrics(metrics, output_metrics):
+def output_metrics(metrics: dict, output_metrics: str) -> str:
     with open(output_metrics, 'w') as f:
         json.dump(metrics, f)
     return output_metrics
@@ -78,7 +78,7 @@ def main():
     model, user_product_matrix, top_summaries = load_model_data(model_file)
     df = pd.read_csv(data_file)
 
-    metrics = evalute_model(model, user_product_matrix, df, top_k, eval_user_count, rating_threshold)
+    metrics = evaluate_model(model, user_product_matrix, df, top_k, eval_user_count, rating_threshold)
     output_metrics(metrics, output_metrics_path)
 
 if __name__ == "__main__":

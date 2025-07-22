@@ -3,16 +3,16 @@ import pandas as pd
 import numpy as np
 import os
 
-def download_data(dataset_name, path):
+def download_data(dataset_name: str, path: str) -> str:
     kaggle.api.dataset_download_files(dataset_name, path=path, unzip=True)
     return os.path.join(path, 'Reviews.csv')
 
-def read_data(data_path='data/raw/Reviews.csv'):
+def read_data(data_path: str = 'data/raw/Reviews.csv') -> pd.DataFrame:
     # Correct the file path to match the actual location
     df = pd.read_csv(data_path)
     return df
 
-def main():
+def main() -> None:
     dataset_name = 'snap/amazon-fine-food-reviews'
     path= 'data/raw'
     data_path = download_data(dataset_name, path)
