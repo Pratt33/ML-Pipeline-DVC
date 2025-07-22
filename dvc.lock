@@ -5,8 +5,8 @@ stages:
     deps:
     - path: src/data_ingestion.py
       hash: md5
-      md5: d8a235b6aacb3db214903012b0e6b349
-      size: 1880
+      md5: 5b0bbb0dd44c389852ec0234b94bd406
+      size: 3872
     outs:
     - path: data/raw/Reviews.csv
       hash: md5
@@ -21,8 +21,8 @@ stages:
       size: 301472984
     - path: src/data_preprocess.py
       hash: md5
-      md5: daf04bd52668dd523f5d97632679e9b0
-      size: 1728
+      md5: d765987a310c1a698353a4abddcd7593
+      size: 2386
     outs:
     - path: data/processed/processed_reviews.csv
       hash: md5
