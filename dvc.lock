@@ -5,24 +5,24 @@ stages:
     deps:
     - path: src/data_ingestion.py
       hash: md5
-      md5: b6415745e5275dd0114b4ca4625abca1
-      size: 260
+      md5: ce01d3e6aa00c9ea992b7ecba076c787
+      size: 728
     outs:
     - path: data/raw/Reviews.csv
       hash: md5
-      md5: c3c950ae0be8b0736477c89d052d33fd
-      size: 300904694
+      md5: a0cd10a45db57e5796b860d76abf40c5
+      size: 301472984
   data_preprocess:
     cmd: python src/data_preprocess.py
     deps:
     - path: data/raw/Reviews.csv
       hash: md5
-      md5: c3c950ae0be8b0736477c89d052d33fd
-      size: 300904694
+      md5: a0cd10a45db57e5796b860d76abf40c5
+      size: 301472984
     - path: src/data_preprocess.py
       hash: md5
-      md5: 145fa8b4fe24ee232ebad018dc0b5a29
-      size: 568
+      md5: 058178c0358298592fef608c1a0e458a
+      size: 1024
     outs:
     - path: data/processed/processed_reviews.csv
       hash: md5
@@ -37,8 +37,8 @@ stages:
       size: 283863027
     - path: src/training.py
       hash: md5
-      md5: fb0111b4f953aebf2d8816a9ebdd7162
-      size: 1834
+      md5: 5da419b8c9f8517576799c9a9908d67b
+      size: 3214
     params:
       params.yaml:
         train.metric: cosine
@@ -63,8 +63,8 @@ stages:
       size: 3267395638
     - path: src/evaluate.py
       hash: md5
-      md5: 244ab2e6c327d1b44c832c45ebf17f9f
-      size: 1866
+      md5: 8f7613fe515efa17bd349ca84cd8d0a1
+      size: 2995
     params:
       params.yaml:
         evaluate.eval_user_count: 50
@@ -73,5 +73,5 @@ stages:
     outs:
     - path: metrics/recall.json
       hash: md5
-      md5: 1c3a7e01fe4c957615cf29438a1a2ec3
+      md5: 36df29ab47ea6843f879f3799d4824c3
       size: 22
