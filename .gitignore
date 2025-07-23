@@ -14,6 +14,30 @@ __pycache__/
 # Environment files
 .env
 *.env
+.env.local
+.env.production
+
+# Security & Credentials
+config.ini
+secrets.yaml
+credentials.json
+api_keys.txt
+*.key
+*.pem
+
+# Azure Storage
+azure.conf
+azure-credentials.json
+.azure/
+
+# Parameter files with sensitive data
+params_local.yaml
+params_prod.yaml
+local_config.yaml
+
+# Database connections
+connection_string.txt
+db_config.py
 
 # Data, models, and outputs (DVC will manage .dvc files)
 data/
@@ -40,7 +64,14 @@ Thumbs.db
 
 # Streamlit
 .streamlit/
+secrets.toml
+
+# Jupyter notebook outputs with sensitive data
+notebooks/*_output.ipynb
+notebooks/*_private.ipynb
 
 # Allow DVC pipeline files
 !/dvc.yaml
 !/dvc.lock
+# Allow metrics files that should be tracked
+!/metrics/*.json

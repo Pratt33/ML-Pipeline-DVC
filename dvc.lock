@@ -1,9 +1,9 @@
 schema: '2.0'
 stages:
   data_ingestion:
-    cmd: python src/data_ingestion.py
+    cmd: python src/data/make_dataset.py
     deps:
-    - path: src/data_ingestion.py
+    - path: src/data/make_dataset.py
       hash: md5
       md5: 5b0bbb0dd44c389852ec0234b94bd406
       size: 3872
@@ -13,13 +13,13 @@ stages:
       md5: a0cd10a45db57e5796b860d76abf40c5
       size: 301472984
   data_preprocess:
-    cmd: python src/data_preprocess.py
+    cmd: python src/features/build_features.py
     deps:
     - path: data/raw/Reviews.csv
       hash: md5
       md5: a0cd10a45db57e5796b860d76abf40c5
       size: 301472984
-    - path: src/data_preprocess.py
+    - path: src/features/build_features.py
       hash: md5
       md5: d765987a310c1a698353a4abddcd7593
       size: 2386
@@ -29,13 +29,13 @@ stages:
       md5: d258c2fd2e61dc8b10db50af6b1e1a8e
       size: 283863027
   train_model:
-    cmd: python src/training.py
+    cmd: python src/models/train_model.py
     deps:
     - path: data/processed/processed_reviews.csv
       hash: md5
       md5: d258c2fd2e61dc8b10db50af6b1e1a8e
       size: 283863027
-    - path: src/training.py
+    - path: src/models/train_model.py
       hash: md5
       md5: 029ba299be7bda66b2ba30d40666f61c
       size: 4517
@@ -51,7 +51,7 @@ stages:
       md5: d77816d845288d5a43317aacb225b66f
       size: 3267395638
   evaluate_model:
-    cmd: python src/evaluate.py
+    cmd: python src/models/predict_model.py
     deps:
     - path: data/processed/processed_reviews.csv
       hash: md5
@@ -61,7 +61,7 @@ stages:
       hash: md5
       md5: d77816d845288d5a43317aacb225b66f
       size: 3267395638
-    - path: src/evaluate.py
+    - path: src/models/predict_model.py
       hash: md5
       md5: 776a439e47cdacd6e5862ad6c091d57d
       size: 4522
@@ -73,5 +73,5 @@ stages:
     outs:
     - path: metrics/recall.json
       hash: md5
-      md5: a7bf89c5ac24969783a4c99373bc6fac
+      md5: b2a67bcee4a021c5182f2ceb0dd02aa8
       size: 23
