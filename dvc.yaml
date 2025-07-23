@@ -1,24 +1,24 @@
 stages:
   data_ingestion:
-    cmd: python src/data_ingestion.py
+    cmd: python src/data/make_dataset.py
     deps:
-    - src/data_ingestion.py
+    - src/data/make_dataset.py
     outs:
     - data/raw/Reviews.csv
 
   data_preprocess:
-    cmd: python src/data_preprocess.py
+    cmd: python src/features/build_features.py
     deps:
-    - src/data_preprocess.py
+    - src/features/build_features.py
     - data/raw/Reviews.csv
     outs:
     - data/processed/processed_reviews.csv
 
   train_model:
-    cmd: python src/training.py
+    cmd: python src/models/train_model.py
     deps:
     - data/processed/processed_reviews.csv
-    - src/training.py
+    - src/models/train_model.py
     params:
     - train.min_user_interactions
     - train.min_product_interactions
@@ -28,11 +28,11 @@ stages:
     - models/knn_model.pkl
 
   evaluate_model:
-    cmd: python src/evaluate.py
+    cmd: python src/models/predict_model.py
     deps:
     - data/processed/processed_reviews.csv
     - models/knn_model.pkl
-    - src/evaluate.py
+    - src/models/predict_model.py
     params:
     - evaluate.top_k
     - evaluate.eval_user_count
