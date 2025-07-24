@@ -12,14 +12,15 @@ stages:
     - src/features/build_features.py
     - data/raw/Reviews.csv
     outs:
-    - data/processed/user_item_matrix.csv
+    - data/processed/user_item_matrix.npz
+    - data/processed/matrix_info.pkl
     - data/processed/user_mapping.csv
     - data/processed/item_mapping.csv
 
   train_model:
     cmd: python src/models/train_model.py
     deps:
-    - data/processed/user_item_matrix.csv
+    - data/processed/user_item_matrix.npz
     - src/models/train_model.py
     params:
     - model.n_components
@@ -33,16 +34,14 @@ stages:
   evaluate_model:
     cmd: python src/models/predict_model.py
     deps:
-    - data/processed/user_item_matrix.csv
+    - data/processed/user_item_matrix.npz
     - models/matrix_factorization_model.pkl
     - models/user_factors.csv
     - models/item_factors.csv
     - src/models/predict_model.py
     params:
     - evaluate.top_k
-    - evaluate.test_size
+    - evaluate.sample_users
     metrics:
-    - metrics/reconstruction_error.json:
-        cache: false
-    - metrics/recommendation_metrics.json:
+    - metrics/recall.json:
         cache: false

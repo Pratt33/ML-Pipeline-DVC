@@ -21,57 +21,83 @@ stages:
       size: 301472984
     - path: src/features/build_features.py
       hash: md5
-      md5: d765987a310c1a698353a4abddcd7593
-      size: 2386
+      md5: 924c4f10710de85d7d0f07ef2de371e3
+      size: 4265
     outs:
-    - path: data/processed/processed_reviews.csv
+    - path: data/processed/item_mapping.csv
       hash: md5
-      md5: d258c2fd2e61dc8b10db50af6b1e1a8e
-      size: 283863027
+      md5: 8245bc509fe313d28b6d8a0036711f47
+      size: 304592
+    - path: data/processed/matrix_info.pkl
+      hash: md5
+      md5: ed166005901928c9471a4646429c5a12
+      size: 79
+    - path: data/processed/user_item_matrix.npz
+      hash: md5
+      md5: 9f3dd2e3c21d32ab79c760d8f21de4bb
+      size: 368226
+    - path: data/processed/user_mapping.csv
+      hash: md5
+      md5: b4ff13d61ac51d39954b81237ff8c26e
+      size: 494420
   train_model:
     cmd: python src/models/train_model.py
     deps:
-    - path: data/processed/processed_reviews.csv
+    - path: data/processed/user_item_matrix.npz
       hash: md5
-      md5: d258c2fd2e61dc8b10db50af6b1e1a8e
-      size: 283863027
+      md5: 9f3dd2e3c21d32ab79c760d8f21de4bb
+      size: 368226
     - path: src/models/train_model.py
       hash: md5
-      md5: 029ba299be7bda66b2ba30d40666f61c
-      size: 4517
+      md5: fad43eaf5a0deaefa2a4015f9b575af6
+      size: 5507
     params:
       params.yaml:
-        train.metric: cosine
-        train.min_product_interactions: 5
-        train.min_user_interactions: 5
-        train.neighbors: 5
+        model.max_iter: 1000
+        model.n_components: 50
+        model.random_state: 42
     outs:
-    - path: models/knn_model.pkl
+    - path: models/item_factors.csv
       hash: md5
-      md5: d77816d845288d5a43317aacb225b66f
-      size: 3267395638
+      md5: 6b46106f9d5a5a69452d6ab5e7c4d6c6
+      size: 20014136
+    - path: models/matrix_factorization_model.pkl
+      hash: md5
+      md5: 0c6e63b5a86fb321b96c5242bfbf91bb
+      size: 7016995
+    - path: models/user_factors.csv
+      hash: md5
+      md5: b81d7935a42fa40f91aa06a926906895
+      size: 24702705
   evaluate_model:
     cmd: python src/models/predict_model.py
     deps:
-    - path: data/processed/processed_reviews.csv
+    - path: data/processed/user_item_matrix.npz
       hash: md5
-      md5: d258c2fd2e61dc8b10db50af6b1e1a8e
-      size: 283863027
-    - path: models/knn_model.pkl
+      md5: 9f3dd2e3c21d32ab79c760d8f21de4bb
+      size: 368226
+    - path: models/item_factors.csv
       hash: md5
-      md5: d77816d845288d5a43317aacb225b66f
-      size: 3267395638
+      md5: 6b46106f9d5a5a69452d6ab5e7c4d6c6
+      size: 20014136
+    - path: models/matrix_factorization_model.pkl
+      hash: md5
+      md5: 0c6e63b5a86fb321b96c5242bfbf91bb
+      size: 7016995
+    - path: models/user_factors.csv
+      hash: md5
+      md5: b81d7935a42fa40f91aa06a926906895
+      size: 24702705
     - path: src/models/predict_model.py
       hash: md5
-      md5: 776a439e47cdacd6e5862ad6c091d57d
-      size: 4522
+      md5: ec20b4ffd0f760184dde4de9cfde5641
+      size: 7024
     params:
       params.yaml:
-        evaluate.eval_user_count: 50
-        evaluate.rating_threshold: 4
-        evaluate.top_k: 5
+        evaluate.sample_users: 100
+        evaluate.top_k: 10
     outs:
     - path: metrics/recall.json
       hash: md5
-      md5: b2a67bcee4a021c5182f2ceb0dd02aa8
-      size: 23
+      md5: 9463080517ee73e8655cc77dfa72f76b
+      size: 152

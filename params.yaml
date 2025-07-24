@@ -1,17 +1,12 @@
 train:
-  min_user_interactions: 5
-  min_product_interactions: 5
-  metric: cosine
-  neighbors: 5
+  min_user_interactions: 15
+  min_product_interactions: 15
 
 model:
   n_components: 50
   max_iter: 1000
   random_state: 42
-  alpha: 0.1
-  l1_ratio: 0.5
 
 evaluate:
   top_k: 10
-  test_size: 0.2
-  min_interactions: 5
+  sample_users: 100
