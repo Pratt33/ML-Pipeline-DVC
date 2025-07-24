@@ -12,31 +12,37 @@ stages:
     - src/features/build_features.py
     - data/raw/Reviews.csv
     outs:
-    - data/processed/processed_reviews.csv
+    - data/processed/user_item_matrix.csv
+    - data/processed/user_mapping.csv
+    - data/processed/item_mapping.csv
 
   train_model:
     cmd: python src/models/train_model.py
     deps:
-    - data/processed/processed_reviews.csv
+    - data/processed/user_item_matrix.csv
     - src/models/train_model.py
     params:
-    - train.min_user_interactions
-    - train.min_product_interactions
-    - train.metric
-    - train.neighbors
+    - model.n_components
+    - model.max_iter
+    - model.random_state
     outs:
-    - models/knn_model.pkl
+    - models/matrix_factorization_model.pkl
+    - models/user_factors.csv
+    - models/item_factors.csv
 
   evaluate_model:
     cmd: python src/models/predict_model.py
     deps:
-    - data/processed/processed_reviews.csv
-    - models/knn_model.pkl
+    - data/processed/user_item_matrix.csv
+    - models/matrix_factorization_model.pkl
+    - models/user_factors.csv
+    - models/item_factors.csv
     - src/models/predict_model.py
     params:
     - evaluate.top_k
-    - evaluate.eval_user_count
-    - evaluate.rating_threshold
+    - evaluate.test_size
     metrics:
-    - metrics/recall.json:
+    - metrics/reconstruction_error.json:
+        cache: false
+    - metrics/recommendation_metrics.json:
         cache: false
