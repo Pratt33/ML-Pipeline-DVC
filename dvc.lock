@@ -26,20 +26,20 @@ stages:
     outs:
     - path: data/processed/item_mapping.csv
       hash: md5
-      md5: 8245bc509fe313d28b6d8a0036711f47
-      size: 304592
+      md5: 374f561d8ac94a297fac46469fb5fb27
+      size: 101180
     - path: data/processed/matrix_info.pkl
       hash: md5
-      md5: ed166005901928c9471a4646429c5a12
-      size: 79
+      md5: 8b0fc0dfbbd23941bf0f22dbde43bd9a
+      size: 77
     - path: data/processed/user_item_matrix.npz
       hash: md5
-      md5: 9f3dd2e3c21d32ab79c760d8f21de4bb
-      size: 368226
+      md5: 73dae2c1533aa8fb80b6cbf2ce3d13f7
+      size: 118532
     - path: data/processed/user_mapping.csv
       hash: md5
-      md5: b4ff13d61ac51d39954b81237ff8c26e
-      size: 494420
+      md5: 1973fd8873fdc24e396dd5239e578ae9
+      size: 67019
   train_model:
     cmd: python src/models/train_model.py
     deps:
